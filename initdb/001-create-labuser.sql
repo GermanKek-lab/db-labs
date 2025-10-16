@@ -1,0 +1,8 @@
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'labuser') THEN
+CREATE ROLE labuser WITH LOGIN PASSWORD 'labpass';
+ALTER ROLE labuser CREATEDB;
+    GRANT ALL PRIVILEGES ON DATABASE postgres TO labuser;
+END IF;
+END $$;
