@@ -64,7 +64,7 @@ def ensure_db(env, db_name, recreate=False):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Create <lab>_db and run labs/<lab>/sql/_run_all.sql")
+        description="Create <lab>_db and run labs/<lab>/sql/_run_all.sql (or use a specified DB)")
     parser.add_argument("lab", help="lab code, e.g. lab01")
     parser.add_argument("--file", "-f", default=None,
                         help="Path to SQL file (default: labs/<lab>/sql/_run_all.sql)")
@@ -72,11 +72,14 @@ def main():
                         help="Drop and recreate the lab DB before running SQL")
     parser.add_argument("--vars", nargs="*", default=[],
                         help="Key=Value pairs passed to psql via -v (e.g. --vars SCHEMA=lab01 TZ=UTC)")
+    parser.add_argument("--db-name", default=None,
+                        help="Explicit database name to use (e.g. 'shared_lab_db'). If not set, uses <lab>_db.")
     args = parser.parse_args()
 
     env = load_env(ENV_PATH)
     lab = args.lab
-    db_name = f"{lab}_db"
+
+    db_name = args.db_name or f"{lab}_db"
 
     sql_file = args.file or os.path.join(ROOT, "labs", lab, "sql", "_run_all.sql")
     if not os.path.exists(sql_file):
