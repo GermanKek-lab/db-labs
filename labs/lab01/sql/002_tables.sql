@@ -70,8 +70,8 @@ create table if not exists currency (
 
 create table if not exists exchange_rate (
     id          bigint   primary key,
-    base_code   text        not null unique,
-    quote_code  text        not null unique,
+    base_code   text        not null,
+    quote_code  text        not null,
     rate        numeric(18, 8) not null check (rate > 0),
     update_at   timestamp  not null default now()
 );
